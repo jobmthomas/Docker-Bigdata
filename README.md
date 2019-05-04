@@ -159,6 +159,6 @@ The last line in the script is a little tricky.  **tail -f /dev/null** , It will
 
 ### Conclusion :
 
-Creating a development environment for big data is support easy with this dockerization project. Now we can concentrate only on the installation of new components, rather than setting up the basic building blocks such as Database,SSL login, HDFS, etc. 
+Creating a development environment for big data is super easy with this dockerization project. Now we can concentrate only on the installation of new components, rather than setting up the basic building blocks such as Database,SSL login, HDFS, etc. 
                  
 
