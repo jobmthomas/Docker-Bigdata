@@ -157,7 +157,7 @@ Line 26 in docker compose :
 
 The last line in the script is a little tricky.  **tail -f /dev/null** , It will allow the container to keep running.
 
-#Conclusion :
+## Conclusion :
 
 Creating a development environment for big data is support easy with this dockerization project. Now we can concentrate only on the  
 installation of new components, rather than setting up the basic building blocks such as Database,SSL login, HDFS, etc. 
