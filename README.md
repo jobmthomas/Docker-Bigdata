@@ -67,7 +67,7 @@ we install via docker file.
 
 ## Docker file : Docker-Bigdata/bigdata-cluster/Dockerfile
 
-**Line 1 **: Here we use a Ubuntu 16.O4 image as a base.
+**Line 1**: Here we use a Ubuntu 16.O4 image as a base.
 
 ### Installing Java
 **Line 3-9**: Installs java using apt-get installer that comes along with Ubuntu.  
