@@ -1,5 +1,3 @@
-A working setup of docker which runs Hadoop and other big data components are very useful for development and testing of a big data project.When I was in need, I couldn't found a simple and a working docker setup and here would like to bring together it for you. Please download the files from here.
-
 # Docker-Bigdata
 
 ## docker-compose.yml
