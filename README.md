@@ -102,7 +102,7 @@ This tells the docker that any request to the host machine port 1431 should be f
 
 ### Installs hive, spark, sqoop
 
-The flow of hive, spark, and sqoop installation is similar to Hadoop installation except for below lines
+The flow of hive, spark, and sqoop installation is similar to Hadoop installation except for below lines  
 **Line 44**: Copies the mssql driver to the hive's library folder. We are using the mssql for hive meta-store and the meta-store initialization requires the specific database driver.  
 **Line 45**: During hive meta-store initialization ( we will come to that later), the script hive-schema-1.2.0.mssql.sql is used.
 This script contains some insert statement which will cause duplicate records in meta store DB during the second start of bigdata-cluster service. in order to avoid that I have added a 'delete where' before the insert.   
