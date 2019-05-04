@@ -155,6 +155,6 @@ Line 26 in docker compose :
     command: sh -c './start-ecosystem.sh'
 ``` 
 
-The last line in the script is a little tricky.  ** tail -f /dev/null ** , It will allow the container to keep running.
+The last line in the script is a little tricky.  **tail -f /dev/null** , It will allow the container to keep running.
                  
 
