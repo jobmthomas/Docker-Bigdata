@@ -2,7 +2,7 @@
 
 ## docker-compose.yml
 
-Run the docker compose file as  docker-compose up --build . The doctor compose contains 3 parts
+Run the docker compose file as  docker-compose up --build . This will brings up all necessary docker containers and you can start using it. The initial build will take considerably long time depends on your internet speed. The doctor compose contains 3 parts
 
 ### mssql-db:
 
@@ -92,7 +92,7 @@ This tells the docker that any request to the host machine port 1431 should be f
 **Line 21**: This is a configuration change to allow login to the bigdata-cluster container using the root user.
               Otherwise, we have to create a new user.
 
-### Installs hadoop
+### Installs Hadoop
 **Line 25** : Create a folder hadoop
 **Line 26** : Download Hadoop binary distribution file
 **Line 27** : Extract the binary dstribution file
@@ -150,7 +150,7 @@ Note: We are not installing the spark daemons as a running process. Spark's loca
  ```
 
 The command argument provided in the docker compose file, invoke the script as part of container initialization
-Line 26 :
+Line 26 in docker compose :
 ```
     command: sh -c './start-ecosystem.sh'
 ``` 
