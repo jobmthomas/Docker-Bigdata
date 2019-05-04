@@ -74,8 +74,8 @@ we install via docker file.
 Line 6 and 7 sets JAVA_HOME and PATH. since we used ENV command of docker, this variable sets only when we get into the docker container via "docker exec -it" command. So in order to get these environment variables available to ssh logins sessions (this is what Hadoop daemons uses internally to communicate), it is required to keep it in bash_profile. Line 8 and 9 do the same. The same approach is taken in many places in this docker file.
 
 ### Installing rsync,vim,sudo,OpenSSH-server,ssh
-**Line 12**: Installs rsync. I am not sure whether this is a must for Hadoop installation. ( I will check and update )
-**Line 13**: Installs vim and sudo. Vim is the file editor. I am not sure whether sudo is a must for Hadoop installation. (I will check and update )
+**Line 12**: Installs rsync. I am not sure whether this is a must for Hadoop installation. ( I will check and update )  
+**Line 13**: Installs vim and sudo. Vim is the file editor. I am not sure whether sudo is a must for Hadoop installation. (I will check and update )  
 
 **Line 14-20**: Installs open ssh server and client, and also perform the steps for enabling a passwordless login. the EXPOSE 22 is required to let the container allow its port 20 to be accessible from other containers in the same network.
 
@@ -88,24 +88,24 @@ Line 29: 30 in docker composer.
 This tells the docker that any request to the host machine port 1431 should be forwarded to port 22 in docker container which is in a totally different network. this is the reason why we are able to connect to the big data cluster container via a putty client in the host machine using the port 1431. ( see the section bigdata-cluster ).
 
 ### Set root user a password
-**Line 21**: sets a password 'root' for the user 'root'
+**Line 21**: sets a password 'root' for the user 'root'  
 **Line 21**: This is a configuration change to allow login to the bigdata-cluster container using the root user.
               Otherwise, we have to create a new user.
 
 ### Installs Hadoop
-**Line 25** : Create a folder hadoop
-**Line 26** : Download Hadoop binary distribution file
-**Line 27** : Extract the binary dstribution file
+**Line 25** : Create a folder hadoop  
+**Line 26** : Download Hadoop binary distribution file  
+**Line 27** : Extract the binary dstribution file  
 **Line 28-32** : Copies pre-configured files from host machine to container's specific folders.
-                 Compare the conf files which come along with the binaries with the files I have modified to get an idea on the basic changes done to let Hadoop run.
+                 Compare the conf files which come along with the binaries with the files I have modified to get an idea on the basic changes done to let Hadoop run.  
 **Line 33-36**  Exports HADOOP_HOME and PATH. 
 
 ### Installs hive, spark, sqoop
 
 The flow of hive, spark, and sqoop installation is similar to Hadoop installation except for below lines
-**Line 44**: Copies the mssql driver to the hive's library folder. We are using the mssql for hive meta-store and the meta-store initialization requires the specific database driver.
+**Line 44**: Copies the mssql driver to the hive's library folder. We are using the mssql for hive meta-store and the meta-store initialization requires the specific database driver.  
 **Line 45**: During hive meta-store initialization ( we will come to that later), the script hive-schema-1.2.0.mssql.sql is used.
-This script contains some insert statement which will cause duplicate records in meta store DB during the second start of bigdata-cluster service. in order to avoid that I have added a 'delete where' before the insert. 
+This script contains some insert statement which will cause duplicate records in meta store DB during the second start of bigdata-cluster service. in order to avoid that I have added a 'delete where' before the insert.   
 
 Example Line :  906 in hive-schema-1.2.0.mssql.sql
 ```
@@ -115,9 +115,9 @@ INSERT INTO NEXT_COMPACTION_QUEUE_ID VALUES(1);
 
 The modified file is copied to the directory and it will override the default script as part of the hive binary.
 
-**Line 52**: Here we are installing Scala, The spark-cli requires Scala.
+**Line 52**: Here we are installing Scala, The spark-cli requires Scala.  
 
-**Line 70**: Copies the mssql driver to the Sqoop 's library folder. as Sqoop is the data export tool, Sqoop required the target database driver available as part of its libraries.
+**Line 70**: Copies the mssql driver to the Sqoop 's library folder. as Sqoop is the data export tool, Sqoop required the target database driver available as part of its libraries.  
 
 
 Note: We are not installing the spark daemons as a running process. Spark's local mode( library mode) is enough in this development setup.
@@ -125,7 +125,7 @@ Note: We are not installing the spark daemons as a running process. Spark's loca
 ### Starting Hadoop,Hive
 
 **Line 77** Copying the script in which all commands to start Hadoop and hive is mentioned.
- Below is the script content and it is self-explanatory 
+ Below is the script content and it is self-explanatory   
  
  ```
  #!/bin/bash
