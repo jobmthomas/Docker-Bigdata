@@ -59,7 +59,7 @@ Putty configurations:
               Username: root
               Password: root
 ```
-Since this the hear of this docker project, a line by line explanation of docker file will be essential for a better understanding. 
+Since this the heart of this docker project, a line by line explanation of docker file will be essential for a better understanding. 
 
 The files in the folder Docker-Bigdata/bigdata-cluster/config/ contain all pre-configured configurations for different software that 
 we install via docker file.
