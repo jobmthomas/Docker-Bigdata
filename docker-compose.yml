@@ -28,6 +28,7 @@ services:
       - mssql-db
     ports:
     - "1431:22"
+    - "1432:8080"
     networks:
       - bigdata-cluster-network
 networks:
