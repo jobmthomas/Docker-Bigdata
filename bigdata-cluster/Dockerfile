@@ -9,6 +9,8 @@ RUN echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >>~/.bash_profile
 RUN echo "export PATH=$PATH:/usr/lib/jvm/java-8-openjdk-amd64/bin" >>~/.bash_profile
 
 #**************************************** INSTALLING rsync vim sudo openssh-server ssh ******************************
+RUN apt-get -y update
+RUN apt-get -y upgrade 
 RUN apt-get -y install rsync
 RUN apt-get -y install vim sudo
 RUN apt-get -y install openssh-server
@@ -40,26 +42,25 @@ RUN $HADOOP_HOME/bin/hdfs namenode -format
 RUN mkdir hive
 RUN wget -P /hive/ https://archive.apache.org/dist/hive/hive-1.2.1/apache-hive-1.2.1-bin.tar.gz
 RUN tar -xzvf /hive/apache-hive-1.2.1-bin.tar.gz -C /hive
-ADD ./config/hive-site.xml ./hive/apache-hive-1.2.2-bin/conf
-ADD ./config/mssql-jdbc-7.0.0.jre8.jar ./hive/apache-hive-1.2.2-bin/lib
-ADD ./config/hive-schema-1.2.0.mssql.sql ./hive/apache-hive-1.2.2-bin/scripts/metastore/upgrade/mssql/
-ENV HIVE_HOME /hive/apache-hive-1.2.2-bin
+ADD ./config/hive-site.xml ./hive/apache-hive-1.2.1-bin/conf
+ADD ./config/mssql-jdbc-7.0.0.jre8.jar ./hive/apache-hive-1.2.1-bin/lib
+ADD ./config/hive-schema-1.2.0.mssql.sql ./hive/apache-hive-1.2.1-bin/scripts/metastore/upgrade/mssql/
+ENV HIVE_HOME /hive/apache-hive-1.2.1-bin
 ENV PATH $PATH:$HIVE_HOME/bin
-RUN echo "export HIVE_HOME=/hive/apache-hive-1.2.2-bin" >>~/.bash_profile
+RUN echo "export HIVE_HOME=/hive/apache-hive-1.2.1-bin" >>~/.bash_profile
 RUN echo "export PATH=$PATH:$HIVE_HOME/bin" >>~/.bash_profile
 
 #**************************************** INSTALLING spark and configure ******************************
 RUN apt-get -y install scala
 RUN mkdir spark
-
-RUN wget -P /spark/ http://mirrors.estointernet.in/apache/spark/spark-2.4.2/spark-2.4.2-bin-hadoop2.7.tgz
-RUN tar -xzvf /spark/spark-2.4.2-bin-hadoop2.7.tgz -C /spark
-ADD ./config/hive-site.xml ./spark/spark-2.4.2-bin-hadoop2.7/conf
-ADD ./config/core-site.xml ./spark/spark-2.4.2-bin-hadoop2.7/conf
-ADD ./config/hdfs-site.xml ./spark/spark-2.4.2-bin-hadoop2.7/conf
-ENV SPARK_HOME /spark/spark-2.4.2-bin-hadoop2.7
+RUN wget -P /spark/ http://mirrors.estointernet.in/apache/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz
+RUN tar -xzvf /spark/spark-2.4.3-bin-hadoop2.7.tgz -C /spark
+ADD ./config/hive-site.xml ./spark/spark-2.4.3-bin-hadoop2.7/conf
+ADD ./config/core-site.xml ./spark/spark-2.4.3-bin-hadoop2.7/conf
+ADD ./config/hdfs-site.xml ./spark/spark-2.4.3-bin-hadoop2.7/conf
+ENV SPARK_HOME /spark/spark-2.4.3-bin-hadoop2.7
 ENV PATH $PATH:$SPARK_HOME/bin
-RUN echo "export SPARK_HOME=/spark/spark-2.4.2-bin-hadoop2.7" >>~/.bash_profile
+RUN echo "export SPARK_HOME=/spark/spark-2.4.3-bin-hadoop2.7" >>~/.bash_profile
 RUN echo "export PATH=$PATH:$SPARK_HOME/bin" >>~/.bash_profile
 RUN apt-get -y install python2.7 python-pip
 
@@ -72,6 +73,12 @@ ENV SQOOP_HOME /sqoop/sqoop-1.4.7.bin__hadoop-2.6.0
 ENV PATH $PATH:$SQOOP_HOME/bin
 RUN echo "export SQOOP_HOME=/sqoop/sqoop-1.4.7.bin__hadoop-2.6.0" >>~/.bash_profile
 RUN echo "export PATH=$PATH:$SQOOP_HOME/bin" >>~/.bash_profile
+
+#**************************************** INSTALLING NiFi and configure ******************************
+RUN mkdir nifi
+RUN wget -P /nifi http://mirrors.estointernet.in/apache/nifi/1.9.2/nifi-1.9.2-bin.tar.gz
+RUN tar -xzvf /nifi/nifi-1.9.2-bin.tar.gz -C /nifi
+RUN /nifi/nifi-1.9.2/bin/nifi.sh install
 
 #**************************************** load script to start the ecosystem ******************************
 ADD ./config/start-ecosystem.sh .
