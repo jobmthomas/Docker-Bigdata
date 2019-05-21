@@ -1,10 +1,10 @@
 # Docker-Bigdata
 
-    ## HADOOP
-    ## HIVE
-    ## SPARK (STANDALONE)
-    ## SQOOP
-    ## NIFI
+   ## HADOOP
+   ## HIVE
+   ## SPARK (STANDALONE)
+   ## SQOOP
+   ## NIFI
 
 ## docker-compose.yml
 Creating a bigdata docker environment is one step ahead, run the docker compose file as docker-compose up -- build. This will brings up all necessary docker containers and you can start using it. The initial build will take considerably long time depends on your internet speed.
