@@ -117,14 +117,15 @@ The modified file is copied to the directory and it will override the default sc
 
 **Line 52**: Here we are installing Scala, The spark-cli requires Scala.  
 
-**Line 70**: Copies the mssql driver to the Sqoop 's library folder. as Sqoop is the data export tool, Sqoop required the target database driver available as part of its libraries.  
+**Line 70**: Copies the mssql driver to the Sqoop 's library folder. as Sqoop is the data export tool, Sqoop required the target database driver available as part of its libraries. 
 
+**Line 76**: Installing Nifi, the startup command is mentioned in start-ecosystem.sh file
 
 Note: We are not installing the spark daemons as a running process. Spark's local mode( library mode) is enough in this development setup.
 
-### Starting Hadoop,Hive
+### Starting Ecosystem Hadoop,Hive .. etc
 
-**Line 77** Copying the script in which all commands to start Hadoop and hive is mentioned.
+**Line 83** Copying the script in which all commands to start Hadoop and hive is mentioned.
  Below is the script content and it is self-explanatory   
  
  ```
