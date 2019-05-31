@@ -17,6 +17,7 @@ Log in to the cluster using Putty terminal. Putty configurations:
               Username: root
               Password: root
 ---
+
 This docker compose contains 3 services
 
 ### mssql-db:
