@@ -80,6 +80,24 @@ RUN wget -P /nifi http://mirrors.estointernet.in/apache/nifi/1.9.2/nifi-1.9.2-bi
 RUN tar -xzvf /nifi/nifi-1.9.2-bin.tar.gz -C /nifi
 RUN /nifi/nifi-1.9.2/bin/nifi.sh install
 
-#**************************************** load script to start the ecosystem ******************************
-ADD ./config/start-ecosystem.sh .
+#**************************************** INSTALLING Kafka and configure ******************************
+RUN mkdir kafka
+RUN wget -P /kafka http://apache.cs.utah.edu/kafka/2.2.0/kafka_2.11-2.2.0.tgz
+RUN tar -xzvf /kafka/kafka_2.11-2.2.0.tgz -C /kafka
+ENV KAFKA_HOME /kafka/kafka_2.11-2.2.0
+ENV PATH $PATH:$KAFKA_HOME/bin
+RUN echo "export KAFKA_HOME=/kafka/kafka_2.11-2.2.0" >>~/.bash_profile
+RUN echo "export PATH=$PATH:$KAFKA_HOME/bin" >>~/.bash_profile
 
+#**************************************** load script to start/stop the ecosystem ******************************
+ADD ./config/start-ecosystem.sh .
+ADD ./config/stop-all.sh .
+ADD ./config/stop-hadoop.sh .
+ADD ./config/stop-hive.sh .
+ADD ./config/stop-nifi.sh .
+ADD ./config/stop-kafka.sh .
+ADD ./config/start-all.sh .
+ADD ./config/start-hadoop.sh .
+ADD ./config/start-hive.sh .
+ADD ./config/start-nifi.sh .
+ADD ./config/start-kafka.sh .
