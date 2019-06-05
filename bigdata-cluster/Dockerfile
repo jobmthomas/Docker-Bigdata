@@ -93,14 +93,13 @@ RUN echo "export PATH=$PATH:$KAFKA_HOME/bin" >>~/.bash_profile
 RUN useradd -m  -s /bin/bash elastic
 RUN echo "elastic:elastic" | chpasswd
 RUN usermod -aG sudo elastic
-RUN su - elastic
-RUN wget -P /home/elastic/ https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.1.1-linux-x86_64.tar.gz
-RUN tar -xzvf /home/elastic/elasticsearch-7.1.1-linux-x86_64.tar.gz -C /home/elastic/
+COPY elasticsearch-7.1.1-linux-x86_64.tar.gz /home/elastic/
+#RUN sudo -u elastic wget -P /home/elastic/ https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.1.1-linux-x86_64.tar.gz
+RUN sudo -u elastic tar -xzvf /home/elastic/elasticsearch-7.1.1-linux-x86_64.tar.gz -C /home/elastic/
 ENV ELASTIC_SEARCH_HOME /home/elastic/elasticsearch-7.1.1
 ENV PATH $PATH:$ELASTIC_SEARCH_HOME/bin
 RUN echo "export ELASTIC_SEARCH_HOME=/home/elastic/elasticsearch-7.1.1" >>~/.bash_profile
 RUN echo "export PATH=$PATH:$ELASTIC_SEARCH_HOME/bin" >>~/.bash_profile
-RUN chmod 777 -R /home/*
 
 #********************************************* Moving ~/.bash_profile to /etc/profile.d/ to get env variables to all users ****************
 RUN cp ~/.bash_profile /etc/profile.d/bash_profile.sh
