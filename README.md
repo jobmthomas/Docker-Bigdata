@@ -8,7 +8,16 @@
 
 ## docker-compose.yml
 Creating a bigdata docker environment is one step ahead, run the docker compose file as docker-compose up -- build. This will brings up all necessary docker containers and you can start using it. The initial build will take considerably long time depends on your internet speed.
-The doctor compose contains 3 parts
+
+Log in to the cluster using Putty terminal. Putty configurations:
+             
+              Host: localhost
+              Port: 1431
+              Protocol: ssh
+              Username: root
+              Password: root
+              
+This docker compose contains 3 services
 
 ### mssql-db:
 
@@ -80,10 +89,10 @@ we install via docker file.
 Line 6 and 7 sets JAVA_HOME and PATH. since we used ENV command of docker, this variable sets only when we get into the docker container via "docker exec -it" command. So in order to get these environment variables available to ssh logins sessions (this is what Hadoop daemons uses internally to communicate), it is required to keep it in bash_profile. Line 8 and 9 do the same. The same approach is taken in many places in this docker file.
 
 ### Installing rsync,vim,sudo,OpenSSH-server,ssh
-**Line 12**: Installs rsync. I am not sure whether this is a must for Hadoop installation. ( I will check and update )  
-**Line 13**: Installs vim and sudo. Vim is the file editor. I am not sure whether sudo is a must for Hadoop installation. (I will check and update )  
+**Line 14**: Installs rsync. I am not sure whether this is a must for Hadoop installation. ( I will check and update )  
+**Line 15**: Installs vim and sudo. Vim is the file editor. I am not sure whether sudo is a must for Hadoop installation. 
 
-**Line 14-20**: Installs open ssh server and client, and also perform the steps for enabling a passwordless login. the EXPOSE 22 is required to let the container allow its port 20 to be accessible from other containers in the same network.
+**Line 16-22**: Installs open ssh server and client, and also perform the steps for enabling a passwordless login. the EXPOSE 22 is required to let the container allow its port 20 to be accessible from other containers in the same network.
 
 The port mapping in docker composer is different that EXPOSE. the port mapping let the docker containers port to be accessed via hosts port. 
 Line 29: 30 in docker composer.
@@ -94,45 +103,44 @@ Line 29: 30 in docker composer.
 This tells the docker that any request to the host machine port 1431 should be forwarded to port 22 in docker container which is in a totally different network. this is the reason why we are able to connect to the big data cluster container via a putty client in the host machine using the port 1431. ( see the section bigdata-cluster ).
 
 ### Set root user a password
-**Line 21**: sets a password 'root' for the user 'root'  
-**Line 21**: This is a configuration change to allow login to the bigdata-cluster container using the root user.
+**Line 23**: sets a password 'root' for the user 'root'  
+**Line 24**: This is a configuration change which will allow us to login to the bigdata-cluster container using the root user(root).
               Otherwise, we have to create a new user.
 
 ### Installs Hadoop
-**Line 25** : Create a folder hadoop  
-**Line 26** : Download Hadoop binary distribution file  
-**Line 27** : Extract the binary dstribution file  
-**Line 28-32** : Copies pre-configured files from host machine to container's specific folders.
+**Line 27** : Create a folder hadoop  
+**Line 28** : Download Hadoop binary distribution file  
+**Line 29** : Extract the binary dstribution file  
+**Line 30-34** : Copies pre-configured files from host machine to container's specific folders.
                  Compare the conf files which come along with the binaries with the files I have modified to get an idea on the basic changes done to let Hadoop run.  
-**Line 33-36**  Exports HADOOP_HOME and PATH. 
-
+**Line 35-36-37-38**  Exports HADOOP_HOME and PATH. 
+**Line 39**  Formating hadoop namenode
+The startup command for hadoop is mentioned in start-ecosystem.sh file
 ### Installs hive, spark, sqoop
-
-The flow of hive, spark, and sqoop installation is similar to Hadoop installation except for below lines  
-**Line 44**: Copies the mssql driver to the hive's library folder. We are using the mssql for hive meta-store and the meta-store initialization requires the specific database driver.  
-**Line 45**: During hive meta-store initialization ( we will come to that later), the script hive-schema-1.2.0.mssql.sql is used.
-This script contains some insert statement which will cause duplicate records in meta store DB during the second start of bigdata-cluster service. in order to avoid that I have added a 'delete where' before the insert.   
+Many commands for installation of hive,sqoop,spark . etc are similar. Skipping those common commands from explaining.
+Note: We are not installing the spark daemons as a running process. Spark's local mode( library mode) is enough for this development setup.
+**Line 46**: Copies the mssql driver to the hive's library folder. We are using the mssql for hive meta-store and the meta-store initialization requires the specific database driver.  
+**Line 47**: During hive meta-store initialization ( we will come to that later), the script hive-schema-1.2.0.mssql.sql is used.
+This script contains some insert statement which will cause duplicate records in meta store DB during the second start of bigdata-cluster service. in order to avoid that I have added a 'delete where' before the insert. The modified file is copied to the directory and it will override the default script as part of the hive binary.
 
 Example Line :  906 in hive-schema-1.2.0.mssql.sql
 ```
 DELETE FROM NEXT_COMPACTION_QUEUE_ID WHERE NCQ_NEXT=1;
 INSERT INTO NEXT_COMPACTION_QUEUE_ID VALUES(1);
 ````
+The startup command for hive is mentioned in start-ecosystem.sh file
+**Line 54**: Here we are installing Scala, The spark-cli requires Scala.  
 
-The modified file is copied to the directory and it will override the default script as part of the hive binary.
+**Line 71**: Copies the mssql driver to the Sqoop 's library folder. as Sqoop is the data export tool, Sqoop required the target database driver available as part of its libraries. 
 
-**Line 52**: Here we are installing Scala, The spark-cli requires Scala.  
-
-**Line 70**: Copies the mssql driver to the Sqoop 's library folder. as Sqoop is the data export tool, Sqoop required the target database driver available as part of its libraries. 
-
-**Line 76**: Installing Nifi, the startup command is mentioned in start-ecosystem.sh file
-
-Note: We are not installing the spark daemons as a running process. Spark's local mode( library mode) is enough in this development setup.
+**Line 78**: Installing Nifi, the startup command is mentioned in start-ecosystem.sh file
+**Line 84**: Installing kafka, the startup command is mentioned in start-ecosystem.sh file
 
 ### Starting Ecosystem Hadoop,Hive .. etc
 
-**Line 83** Copying the script in which all commands to start Hadoop and hive is mentioned.
- Below is the script content and it is self-explanatory   
+**Line 93-103** Copying the scripts which help us to start complete ecosystem, start each softwares individually and stop in similar fashions.
+
+ Below is the script content and it is self-explanatory
  
  ```
  #!/bin/bash
@@ -156,7 +164,7 @@ Note: We are not installing the spark daemons as a running process. Spark's loca
 
  ```
 
-The command argument provided in the docker compose file, invoke the script as part of container initialization
+The command argument provided in the docker compose file, invoke the script start-ecosystem.sh as part of container initialization
 Line 26 in docker compose :
 ```
     command: sh -c './start-ecosystem.sh'
