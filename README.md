@@ -136,39 +136,61 @@ The startup command for hive is mentioned in start-ecosystem.sh file
 **Line 78**: Installing Nifi, the startup command is mentioned in start-ecosystem.sh file
 **Line 84**: Installing kafka, the startup command is mentioned in start-ecosystem.sh file
 
+**Line 93**: Installing Elastic search. Elastic search is not allowed to run as root user for security reasons.
+ A new user names 'elastic' is created and provided sudo access to it.
+ **Line 96-97**:  Downloading tarball and extraction as elastic user.
+ **Line 98-101**: Exporting environemnt variables
+ 
+ **Line 104**: Copying ~/.bash_profile ( this file exists under root users home folder (~) ) to a common profile location( /etc/profile.d/bash_profile.sh)  as .sh file. All files under this folder is beings sourced by any user login to the system.
+ This is to avail the env setting to the new user 'elastic'.
+ 
 ### Starting Ecosystem Hadoop,Hive .. etc
 
-**Line 93-103** Copying the scripts which help us to start complete ecosystem, start each softwares individually and stop in similar fashions.
-
- Below is the script content and it is self-explanatory
- 
- ```
- #!/bin/bash
-
-      # Start SSH server 
-      service ssh start
-
-      # Start dfs  
-      $HADOOP_HOME/sbin/start-dfs.sh
-
-      # Start yarn  
-      $HADOOP_HOME/sbin/start-yarn.sh
-
-      #initialize metastore schema for hive and start
-      $HIVE_HOME/bin/schematool -dbType mssql -initSchema
-      hive --service metastore &
-      hive --service hiveserver2 &
-
-      # To keep the container running
-      tail -f /dev/null
-
- ```
+**Line 106-116** Copying the scripts which help us to start complete ecosystem, start each softwares individually and stop in similar fashions.
 
 The command argument provided in the docker compose file, invoke the script start-ecosystem.sh as part of container initialization
 Line 26 in docker compose :
 ```
     command: sh -c './start-ecosystem.sh'
 ``` 
+ Below is the script content and it is self-explanatory
+ 
+ ```
+#!/bin/bash
+
+# Start SSH server
+service ssh start
+
+# Start dfs  
+$HADOOP_HOME/sbin/start-dfs.sh
+
+# Start yarn  
+$HADOOP_HOME/sbin/start-yarn.sh
+
+#initialize metastore schema for hive and start
+$HIVE_HOME/bin/schematool -dbType mssql -initSchema
+hive --service metastore &
+echo $! > hive-metsatore-pid.txt
+hive --service hiveserver2 &
+echo $! > hive-server2-pid.txt
+
+# Start nifi
+sudo service nifi start
+
+# Start Kafka Zookeeper
+$KAFKA_HOME/bin/zookeeper-server-start.sh $KAFKA_HOME/config/zookeeper.properties &
+
+# Start Kafka server
+$KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &
+
+# Start elastic search ( Elastic search can't be started as root user )
+sudo -u elastic $ELASTIC_SEARCH_HOME/bin/elasticsearch &
+echo $! > elsaticsearch-pid.txt
+
+# To keep container running
+tail -f /dev/null 
+
+ ```
 
 The last line in the script is a little tricky.  **tail -f /dev/null** , It will allow the container to keep running.
 
