@@ -89,6 +89,21 @@ ENV PATH $PATH:$KAFKA_HOME/bin
 RUN echo "export KAFKA_HOME=/kafka/kafka_2.11-2.2.0" >>~/.bash_profile
 RUN echo "export PATH=$PATH:$KAFKA_HOME/bin" >>~/.bash_profile
 
+#**************************************** INSTALLING elastic search ******************************
+RUN useradd -m  -s /bin/bash elastic
+RUN echo "elastic:elastic" | chpasswd
+RUN usermod -aG sudo elastic
+RUN su - elastic
+RUN wget -P /home/elastic/ https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.1.1-linux-x86_64.tar.gz
+RUN tar -xzvf /home/elastic/elasticsearch-7.1.1-linux-x86_64.tar.gz -C /home/elastic/
+ENV ELASTIC_SEARCH_HOME /home/elastic/elasticsearch-7.1.1
+ENV PATH $PATH:$ELASTIC_SEARCH_HOME/bin
+RUN echo "export ELASTIC_SEARCH_HOME=/home/elastic/elasticsearch-7.1.1" >>~/.bash_profile
+RUN echo "export PATH=$PATH:$ELASTIC_SEARCH_HOME/bin" >>~/.bash_profile
+RUN chmod 777 -R /home/*
+
+#********************************************* Moving ~/.bash_profile to /etc/profile.d/ to get env variables to all users ****************
+RUN cp ~/.bash_profile /etc/profile.d/bash_profile.sh
 #**************************************** load script to start/stop the ecosystem ******************************
 ADD ./config/start-ecosystem.sh .
 ADD ./config/stop-all.sh .
