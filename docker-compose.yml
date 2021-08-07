@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   mssql-db:
-    image: microsoft/mssql-server-linux:latest
+    image: mysql/mysql-server
     restart: always
     environment:
       ACCEPT_EULA: Y
@@ -23,7 +23,8 @@ services:
     build: ./bigdata-cluster/
     restart: always
     container_name: bigdata-cluster
-    command: sh -c './start-ecosystem.sh'
+    #command: sh -c 'start-ecosystem.sh'
+    command: sh 'start-ecosystem.sh'
     depends_on:
       - mssql-db
     ports:

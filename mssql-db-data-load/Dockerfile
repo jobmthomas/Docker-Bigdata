@@ -1,3 +1,3 @@
-FROM microsoft/mssql-server-linux:latest
+FROM mysql/mysql-server
 
 COPY . .

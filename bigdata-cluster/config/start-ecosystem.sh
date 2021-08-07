@@ -4,10 +4,10 @@
 service ssh start
 
 # Start dfs  
-$HADOOP_HOME/sbin/start-dfs.sh
+HADOOP_HOME/sbin/start-dfs.sh
 
 # Start yarn  
-$HADOOP_HOME/sbin/start-yarn.sh
+HADOOP_HOME/sbin/start-yarn.sh
 
 #initialize metastore schema for hive and start
 $HIVE_HOME/bin/schematool -dbType mssql -initSchema
