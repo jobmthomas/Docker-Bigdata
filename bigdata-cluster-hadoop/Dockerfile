@@ -67,7 +67,7 @@ ADD ./config/start-hadoop-ecosystem.sh .
 ADD ./config/stop-hadoop-ecosystem.sh .
 EXPOSE 22
 EXPOSE 9000
-EXPOSE 50070
+#EXPOSE 50070
 EXPOSE 8088
 EXPOSE 9870
 EXPOSE 10000
