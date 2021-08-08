@@ -60,7 +60,7 @@ services:
   bigdata-cluster-elasticsearch:
     build: ./bigdata-cluster-elasticsearch/
     restart: always
-    container_name: bigdata-cluster-elasticsearchi
+    container_name: bigdata-cluster-elasticsearch
     command: sh 'start-elasticsearch.sh'
     ports:
     - "25:22"
