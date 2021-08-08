@@ -19,17 +19,53 @@ services:
       - "mssql-db"
     networks:
       - bigdata-cluster-network
-  bigdata-cluster:
-    build: ./bigdata-cluster/
+  bigdata-cluster-hadoop:
+    build: ./bigdata-cluster-hadoop/
     restart: always
-    container_name: bigdata-cluster
-    #command: sh -c 'start-ecosystem.sh'
-    command: sh 'start-ecosystem.sh'
+    container_name: bigdata-cluster-hadoop
+    command: sh 'start-hadoop-ecosystem.sh'
     depends_on:
       - mssql-db
     ports:
-    - "1431:22"
-    - "1432:8080"
+    - "22:22"
+    - "50070:50070"
+    - "9000:9000"
+    - "8088:8088"
+    - "9870:9870"
+    - "10000:10000"
+    - "9999:9999"
+    - "9083:9083"
+    - "10500:10500"
+    networks:
+      - bigdata-cluster-network
+  bigdata-cluster-mpp:
+    build: ./bigdata-cluster-mpp/
+    restart: always
+    container_name: bigdata-cluster-mpp
+    command: sh 'start-mpp-ecosystem.sh'
+    ports:
+    - "23:22"
+    - "9092:9092"
+    networks:
+      - bigdata-cluster-network
+  bigdata-cluster-nifi:
+    build: ./bigdata-cluster-nifi/
+    restart: always
+    container_name: bigdata-cluster-nifi
+    command: sh 'start-nifi.sh'
+    ports:
+    - "24:22"
+    - "8080:8080"
+    networks:
+      - bigdata-cluster-network
+  bigdata-cluster-elasticsearch:
+    build: ./bigdata-cluster-elasticsearch/
+    restart: always
+    container_name: bigdata-cluster-elasticsearchi
+    command: sh 'start-elasticsearch.sh'
+    ports:
+    - "25:22"
+    - "9200:9200"
     networks:
       - bigdata-cluster-network
 networks:

@@ -38,20 +38,6 @@ RUN echo "export HADOOP_HOME=/hadoop/hadoop-2.7.7" >>~/.bash_profile
 RUN echo "export PATH=$PATH:$HADOOP_HOME/bin" >>~/.bash_profile
 RUN $HADOOP_HOME/bin/hdfs namenode -format
 
-#**************************************** INSTALLING spark and configure ******************************
-RUN apt-get -y install scala
-RUN mkdir spark
-RUN wget -P /spark/ https://mirrors.estointernet.in/apache/spark/spark-3.0.3/spark-3.0.3-bin-hadoop2.7.tgz
-RUN tar -xzvf /spark/spark-3.0.3-bin-hadoop2.7.tgz -C /spark
-ADD ./config/hive-site.xml ./spark/spark-3.0.3-bin-hadoop2.7/conf
-ADD ./config/core-site.xml ./spark/spark-3.0.3-bin-hadoop2.7/conf
-ADD ./config/hdfs-site.xml ./spark/spark-3.0.3-bin-hadoop2.7/conf
-ENV SPARK_HOME /spark/spark-3.0.3-bin-hadoop2.7
-ENV PATH $PATH:$SPARK_HOME/bin
-RUN echo "export SPARK_HOME=/spark/spark-3.0.3-bin-hadoop2.7" >>~/.bash_profile
-RUN echo "export PATH=$PATH:$SPARK_HOME/bin" >>~/.bash_profile
-RUN apt-get -y install python2.7 python-pip
-
 #**************************************** INSTALLING sqoop and configure ******************************
 RUN mkdir sqoop
 RUN wget -P /sqoop/ http://archive.apache.org/dist/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
@@ -61,32 +47,6 @@ ENV SQOOP_HOME /sqoop/sqoop-1.4.7.bin__hadoop-2.6.0
 ENV PATH $PATH:$SQOOP_HOME/bin
 RUN echo "export SQOOP_HOME=/sqoop/sqoop-1.4.7.bin__hadoop-2.6.0" >>~/.bash_profile
 RUN echo "export PATH=$PATH:$SQOOP_HOME/bin" >>~/.bash_profile
-
-#**************************************** INSTALLING NiFi and configure ******************************
-RUN mkdir nifi
-RUN wget -P /nifi https://mirrors.estointernet.in/apache/nifi/1.14.0/nifi-1.14.0-bin.tar.gz
-RUN tar -xzvf /nifi/nifi-1.14.0-bin.tar.gz -C /nifi
-RUN /nifi/nifi-1.14.0/bin/nifi.sh install
-
-#**************************************** INSTALLING Kafka and configure ******************************
-RUN mkdir kafka
-RUN wget -P /kafka https://archive.apache.org/dist/kafka/2.2.2/kafka_2.11-2.2.2.tgz
-RUN tar -xzvf /kafka/kafka_2.11-2.2.2.tgz -C /kafka
-ENV KAFKA_HOME /kafka/kafka_2.11-2.2.2
-ENV PATH $PATH:$KAFKA_HOME/bin
-RUN echo "export KAFKA_HOME=/kafka/kafka_2.11-2.2.2" >>~/.bash_profile
-RUN echo "export PATH=$PATH:$KAFKA_HOME/bin" >>~/.bash_profile
-
-#**************************************** INSTALLING elastic search ******************************
-RUN useradd -m  -s /bin/bash elastic
-RUN echo "elastic:elastic" | chpasswd
-RUN usermod -aG sudo elastic
-RUN sudo -u elastic wget -P /home/elastic/ https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.1.1-linux-x86_64.tar.gz
-RUN sudo -u elastic tar -xzvf /home/elastic/elasticsearch-7.1.1-linux-x86_64.tar.gz -C /home/elastic/
-ENV ELASTIC_SEARCH_HOME /home/elastic/elasticsearch-7.1.1
-ENV PATH $PATH:$ELASTIC_SEARCH_HOME/bin
-RUN echo "export ELASTIC_SEARCH_HOME=/home/elastic/elasticsearch-7.1.1" >>~/.bash_profile
-RUN echo "export PATH=$PATH:$ELASTIC_SEARCH_HOME/bin" >>~/.bash_profile
 
 #**************************************** INSTALLING hive and configure ******************************
 RUN mkdir hive
@@ -103,14 +63,14 @@ RUN echo "export PATH=$PATH:$HIVE_HOME/bin" >>~/.bash_profile
 #********************************************* Moving ~/.bash_profile to /etc/profile.d/ to get env variables to all users ****************
 RUN cp ~/.bash_profile /etc/profile.d/bash_profile.sh
 #**************************************** load script to start/stop the ecosystem ******************************
-ADD ./config/start-ecosystem.sh .
-ADD ./config/stop-all.sh .
-ADD ./config/stop-hadoop.sh .
-ADD ./config/stop-hive.sh .
-ADD ./config/stop-nifi.sh .
-ADD ./config/stop-kafka.sh .
-ADD ./config/start-all.sh .
-ADD ./config/start-hadoop.sh .
-ADD ./config/start-hive.sh .
-ADD ./config/start-nifi.sh .
-ADD ./config/start-kafka.sh .
+ADD ./config/start-hadoop-ecosystem.sh .
+ADD ./config/stop-hadoop-ecosystem.sh .
+EXPOSE 22
+EXPOSE 9000
+EXPOSE 50070
+EXPOSE 8088
+EXPOSE 9870
+EXPOSE 10000
+EXPOSE 9999
+EXPOSE 9083
+EXPOSE 10500
