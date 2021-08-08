@@ -1,3 +1,2 @@
 FROM apache/nifi
-EXPOSE 38487
 EXPOSE 8443

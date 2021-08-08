@@ -40,3 +40,4 @@ RUN cp ~/.bash_profile /etc/profile.d/bash_profile.sh
 ADD ./config/start-elasticsearch.sh .
 ADD ./config/stop-elasticsearch.sh .
 EXPOSE 9200
+EXPOSE 9300
