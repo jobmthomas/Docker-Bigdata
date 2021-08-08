@@ -54,20 +54,19 @@ services:
     command: sh 'start-nifi.sh'
     ports:
     - "24:22"
-    - "38487:38487"
     - "8443:8443"
     networks:
       - bigdata-cluster-network
-#  bigdata-cluster-elasticsearch:
-#    build: ./bigdata-cluster-elasticsearch/
-#    restart: always
-#    container_name: bigdata-cluster-elasticsearchi
-#    command: sh 'start-elasticsearch.sh'
-#    ports:
-#    - "25:22"
-#    - "9200:9200"
-#    networks:
-#      - bigdata-cluster-network
+  bigdata-cluster-elasticsearch:
+    build: ./bigdata-cluster-elasticsearch/
+    restart: always
+    container_name: bigdata-cluster-elasticsearchi
+    command: sh 'start-elasticsearch.sh'
+    ports:
+    - "25:22"
+    - "9200:9200"
+    networks:
+      - bigdata-cluster-network
 networks:
   bigdata-cluster-network:
     name : bigdata-cluster-network
